@@ -7,7 +7,6 @@ export class FlightService{
         return await Flight.findOne({
             where:{
                 id,   
-                status:'pending'
             },
         });
 
@@ -16,25 +15,21 @@ export class FlightService{
     async findAll(){
        return await Flight.findAll({
         where:{
-            status:{
-                [Op.notIn]:['pending','cancelled','inprogres','done']
-            },
+            status:'pending',
         },
        });
     }
 
-    async create(flightData){
-        return await Flight.create(flightData)
+    async create(flight){
+        return await Flight.create(flight)
     }
 
-    async update(flight, flightData){
-        return await flight.update(flightData)
+    async update(flight){
+        return await flight.update(flight)
     }
 
     async delete(flight){
-        return await flight.update({
-            status: 'cancelled',
-        });
+        return await flight.update({status:'cancelled'});
 
     }
 }
