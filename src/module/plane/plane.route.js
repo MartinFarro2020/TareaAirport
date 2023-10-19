@@ -7,9 +7,13 @@ import {
      updatePlane
      } 
      from './plane.controller.js';
+     
 import { validExistPlan } from './plane.middleware.js';
+import { protect } from '../../auth/auth.middleware.js';
 
 export const router = Router();
+
+//router.use(protect)
 
 router.route('/')
     .get(findAllPlane)

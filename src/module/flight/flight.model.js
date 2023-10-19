@@ -29,9 +29,9 @@ const Flight = sequelize.define('flight',{
         allowNull:false,
     },
     status:{
-        type:DataTypes.ENUM('pending','cancelled','inprogres','done'),
-        allowNull:false,
-        defaultValue:'pending',
+        type: DataTypes.ENUM('pending','cancelled','inprogres','done'),
+        allowNull: false,
+        defaultValue: 'pending',
     },
 
 });

@@ -10,8 +10,9 @@ export class PlaneService {
             },
         });
     }
-    async create(data){
-        return await Plane.create(data)
+
+    async create(planeData){
+        return await Plane.create(planeData)
     }
 
     async findOne(id){
@@ -24,8 +25,8 @@ export class PlaneService {
     
     }
 
-    async update(plane){
-        return await Plane.update(plane);
+    async update(plane, planeData){
+        return await plane.update(planeData);
     }
     
     async delete(plane){

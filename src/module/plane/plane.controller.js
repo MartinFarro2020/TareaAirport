@@ -1,60 +1,65 @@
+import { catchAsync, AppError } from '../../errors/index.js'
+import { validatePlane, validatePartialPlane } from "./plane.schema.js";
 import { PlaneService } from "./plane.service.js";
 
 const planeService = new PlaneService()
 
-export const findAllPlane = async(req,res,next)=>{
-    try {
+export const findAllPlane = catchAsync(async(req,res,next)=>{   
 
         const plane = await planeService.findAll()
+        
         return res.status(200).json(plane)
+   
+});
 
-    } catch (error) {
-        return res.status(500).json(error)
-    }
-}
-export const createPlan = async(req,res,next)=>{
-    try {
-        const plane = await planeService.create(req.body)
-        return res.status(201).json(plane)
+export const createPlan = catchAsync(async(req,res,next)=>{
+    
+    const { hasError, errorMessages, planeData } = validatePlane(req.body);
 
-    } catch (error) {
-        return res.status(500).json(error)
-    }
-}
-export const findOnePlane = async(req,res,next)=>{
-    try {
+        if (hasError) {
+            return res.status(422).json({
+              status: 'error',
+              message: errorMessages,
+            });
+        }
 
-        const {plane} = req;       
-        return res.status(200).json(plane);
-        
-    } catch (error) {
-        return res.status(500).json(error)
-    }
-}
-export const updatePlane = async(req,res,next)=>{
-    try {
+        const plane = await planeService.create(planeData);
 
-            const {maxCapacity} = req.body;
-            const {plane}= req;
-            
-            await planeService.update(plane,{maxCapacity});
-            return res.status(200).json({
-                message:'plane has been updated'
-            })
+        return res.status(200).json(plane);               
+});
 
-        
-    } catch (error) {
-        return res.status(500).json(error)
-    }
-}
-export const deletePlane = async(req,res,next)=>{
-    try {
+export const findOnePlane = catchAsync(async (req, res, next) => {
+  
+    const { plane } = req;
+  
+    return res.status(200).json(plane);
 
-        const {plane} = req;
-        await planeService.delete(plane)
-        return res.status(204).json(null)
+  });
 
-    } catch (error) {
-        return res.status(500).json(error)
-    }
-}
+
+export const updatePlane = catchAsync(async (req, res, next) => {
+  
+  const { plane } = req;
+
+  const { hasError, errorMessages, planeData } = validatePartialPlane(req.body);
+
+  if (hasError) {
+    return res.status(422).json({
+      status: 'error',
+      message: errorMessages,
+    });
+  }
+
+  const updatedPlane = await planeService.update(plane, planeData);
+
+  return res.status(200).json(updatedPlane);
+});
+
+
+export const deletePlane = catchAsync(async (req, res, next) => {
+    const { plane } = req;
+  
+    await planeService.delete(plane);
+  
+    return res.status(204).json(null);
+  });
